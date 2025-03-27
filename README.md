@@ -62,19 +62,16 @@ The following table shows the results of scheduling 50 tasks with a queue size o
 | 49      | Task-49   | 5.08          | 5.89          | CPU (GPU full)  |
 
 ### Observations
-- **Priority Queue Behavior**: The priority queue prioritizes tasks based on the intensity difference (`|GPUIntensity - CPUIntensity|`). For example, Task-9 (intensity difference = 6.04) and Task-34 (intensity difference = 9.09) have large differences and were scheduled early, as expected.
+- **Priority Queue Behavior**: Tasks are prioritized based on the absolute intensity difference. However, bottlenecks disrupt this order.
 - **Bottleneck Effects**:
    - Several tasks were routed to suboptimal devices due to queue bottlenecks:
-      - Task-39 (`CPUIntensity: 7.03`, `GPUIntensity: 5.89`) was CPU-bound but ran on the GPU because the CPU queue was full.
-      - Task-46 (`CPUIntensity: 6.66`, `GPUIntensity: 9.86`) was GPU-bound but ran on the CPU because the GPU queue was full.
+      - Task-42 (`CPUIntensity: 6.62`, `GPUIntensity: 4.62`) was GPU-bound but ran on the CPU because the CPU queue was full.
+      - Task-46 (`CPUIntensity: 6.66`, `GPUIntensity: 9.86`) was GPU-bound but ran on the CPU due to a full GPU queue.
    - This demonstrates the "priority queue losing priority" concept: during bottlenecks, high-priority tasks may be delayed or misrouted, while lower-priority tasks already in the CPU/GPU queues are processed first.
 - **Task Distribution**:
-   - Out of 49 tasks scheduled (Task-47 is the last in the table, suggesting some tasks may have been re-added to the priority queue and not processed within the 2-second window), 24 were scheduled on the CPU, and 25 on the GPU.
-   - The presence of "CPU (GPU full)" and "GPU (CPU full)" destinations indicates frequent bottlenecks, especially for later tasks (e.g., Task-45 to Task-50).
+   - Out of the scheduled tasks, roughly equal numbers were processed on the CPU and GPU, though bottlenecks frequently forced suboptimal routing.
+   - Several tasks were re-added to the queue multiple times before finding a slot, increasing overall scheduling delays.
 
 ## Dependencies
 
 - [github.com/olekukonko/tablewriter](https://github.com/olekukonko/tablewriter): Used for printing task metrics in a table format.
-## License
-
-This project is licensed under the MIT License.
