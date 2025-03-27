@@ -65,7 +65,7 @@ The following table shows the results of scheduling 50 tasks with a queue size o
 - **Priority Queue Behavior**: Tasks are prioritized based on the absolute intensity difference. However, bottlenecks disrupt this order.
 - **Bottleneck Effects**:
    - Several tasks were routed to suboptimal devices due to queue bottlenecks:
-      - Task-42 (`CPUIntensity: 6.62`, `GPUIntensity: 4.62`) was GPU-bound but ran on the CPU because the CPU queue was full.
+      - Task-42 (`CPUIntensity: 6.62`, `GPUIntensity: 4.62`) was CPU-bound but ran on the GPU because the CPU queue was full.
       - Task-46 (`CPUIntensity: 6.66`, `GPUIntensity: 9.86`) was GPU-bound but ran on the CPU due to a full GPU queue.
    - This demonstrates the "priority queue losing priority" concept: during bottlenecks, high-priority tasks may be delayed or misrouted, while lower-priority tasks already in the CPU/GPU queues are processed first.
 - **Task Distribution**:
